@@ -25,6 +25,7 @@ export class HeroService {
     private messageService: MessageService
   ) { }
 
+  // getHeroes from the server
   getHeroes(): Observable<Hero[]> {
     return this.http.get<Hero[]>(this.heroesUrl)
       .pipe(
@@ -33,6 +34,21 @@ export class HeroService {
       );
   }
 
+  /** GET hero by id. Return `undefined` when id not found */
+  getHeroNo404<Data>(id: number): Observable<Hero> {
+    const url = `${this.heroesUrl}/?id=${id}`;
+    return this.http.get<Hero[]>(url)
+      .pipe(
+        map(heroes => heroes[0]), // returns a {0|1} element array
+        tap(h => {
+          const outcome = h ? `fetched` : `did not find`;
+          this.log(`${outcome} hero id=${id}`);
+        }),
+        catchError(this.handleError<Hero>(`getHero id=${id}`))
+      );
+  }
+
+  // get one specified hero with a certain, if not found will return 404
   getHero(id: number): Observable<Hero> {
     const url = `${this.heroesUrl}/${id}`;
     return this.http.get<Hero>(url).pipe(
@@ -41,6 +57,22 @@ export class HeroService {
     );
   }
 
+  // Get heroes with name matching to search term
+  searchHeroes(term: string): Observable<Hero[]> {
+    if (!term.trim()) {
+      // if the search term is empty, return empty hero array.
+      return of([]);
+    }
+    return this.http.get<Hero[]>(`${this.heroesUrl}/?name=${term}`)
+      .pipe(
+        tap(_ => this.log(`found heroes matching "${term}"`)),
+        catchError(this.handleError<Hero[]>('searchHeroes', []))
+      );
+  }
+
+  ///////// Save methods /////////
+
+  // PUT: update the details of a hero
   updateHero(hero: Hero): Observable<any> {
     return this.http.put(this.heroesUrl, hero, this.httpOptions)
       .pipe(
@@ -49,6 +81,7 @@ export class HeroService {
       );
   }
 
+  // POST: add a new hero
   addHero(hero: Hero): Observable<Hero> {
     return this.http.post(this.heroesUrl, hero, this.httpOptions)
       .pipe(
@@ -57,6 +90,7 @@ export class HeroService {
       );
   }
 
+  // DELETED: deleted a hero
   deleteHero(hero: Hero | number): Observable<Hero> {
     const id = typeof hero === 'number' ? hero : hero.id;
     const url = `${this.heroesUrl}/${id}`;
@@ -66,10 +100,6 @@ export class HeroService {
         tap(_ => this.log(`deleted hero id=${id}`)),
         catchError(this.handleError<Hero>('deletedHero'))
       );
-  }
-
-  private log(message: string) {
-    this.messageService.add(`HeroService ${message}`);
   }
 
   /**
@@ -86,6 +116,11 @@ export class HeroService {
 
       return of(result as T);
     };
+  }
+
+  // log messages to the messageService
+  private log(message: string) {
+    this.messageService.add(`HeroService ${message}`);
   }
 
 }
