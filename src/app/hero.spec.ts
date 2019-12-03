@@ -1,6 +1,6 @@
 import { Hero } from './hero';
 
-describe('Hero', () => {
+describe('Hero Class', () => {
 
   let hero: Hero;
 
