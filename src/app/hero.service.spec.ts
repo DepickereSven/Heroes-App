@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { MessageService } from './message.service';
 import { HeroService } from './hero.service';
 import {ReplaySubject} from 'rxjs';
+import {Hero} from './hero';
 
 jest.mock('@angular/common/http');
 
@@ -30,7 +31,10 @@ describe('heroService', () => {
 
   beforeEach(() => {
     httpClientMock = {
-      get: jest.fn()
+      get: jest.fn(),
+      put: jest.fn(),
+      post: jest.fn(),
+      delete: jest.fn()
     } as any;
   });
 
@@ -51,11 +55,7 @@ describe('heroService', () => {
       expect(res).toEqual(dummyHeroes);
     });
 
-    // const res$ = heroService.getHeroes();
-
     expect(httpClientMock.get).toHaveBeenCalledWith(heroesUrl);
-
-    // expect(res$).toBe(get$);
   });
 
   it('get One specified hero', () => {
@@ -81,5 +81,23 @@ describe('heroService', () => {
 
     expect(httpClientMock.get).toHaveBeenCalledWith(heroesUrl + `/?name=${term}`);
   });
+
+
+  it('update the details of a hero', () => {
+    const put$ = new ReplaySubject(1);
+    httpClientMock.put = jest.fn().mockReturnValue(put$);
+    heroService = create();
+
+    const hero: Hero = { id: 20, name: 'UpdateNameHero'};
+
+    heroService.updateHero(hero);
+
+    heroService = getCreate();
+    heroService.getHero(20).subscribe((res) => {
+      expect(res).toEqual(hero);
+    });
+
+  });
+
 
 });
