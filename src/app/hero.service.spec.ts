@@ -92,7 +92,9 @@ describe('heroService', () => {
 
     heroService.updateHero(hero);
 
-    heroService = getCreate();
+    const get$ = new ReplaySubject(1);
+    httpClientMock.get = jest.fn().mockReturnValue(get$);
+
     heroService.getHero(20).subscribe((res) => {
       expect(res).toEqual(hero);
     });
@@ -107,9 +109,34 @@ describe('heroService', () => {
     const hero: Hero = { id: 21, name: 'InsertNewHero' };
     heroService.addHero(hero);
 
-    heroService = getCreate();
+    const get$ = new ReplaySubject(1);
+    httpClientMock.get = jest.fn().mockReturnValue(get$);
+
     heroService.getHero(21).subscribe((res) => {
       expect(res).toEqual(hero);
+    });
+  });
+
+  it('delete a hero', () => {
+    const delete$ = new ReplaySubject(1);
+    httpClientMock.delete = jest.fn().mockReturnValue(delete$);
+    heroService = create();
+
+    const hero: Hero = { id: 18, name: 'Dr IQ' };
+    heroService.deleteHero(20);
+    heroService.deleteHero(hero);
+
+
+    const get$ = new ReplaySubject(1);
+    httpClientMock.get = jest.fn().mockReturnValue(get$);
+
+    heroService.getHero(20).subscribe((res) => {
+      console.log(res);
+      expect(res).toEqual(null);
+    })
+
+    heroService.getHero(hero.id).subscribe((res) => {
+      console.log(res);
     });
 
   });
