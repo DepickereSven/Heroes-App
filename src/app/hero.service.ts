@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, map, tap } from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {catchError, map, tap} from 'rxjs/operators';
 
-import { Observable, of } from 'rxjs';
+import {Observable, of} from 'rxjs';
 
-import { Hero } from './hero';
-import { MessageService } from './message.service';
+import {Hero} from './hero';
+import {MessageService} from './message.service';
 
 @Injectable({
   providedIn: 'root'
@@ -51,10 +51,11 @@ export class HeroService {
   // get one specified hero with a certain, if not found will return 404
   getHero(id: number): Observable<Hero> {
     const url = `${this.heroesUrl}/${id}`;
-    return this.http.get<Hero>(url).pipe(
-      tap(_ => this.log(`fetched hero id=${id}`)),
-      catchError(this.handleError<Hero>(`getHero id=${id}`))
-    );
+    return this.http.get<Hero>(url)
+      .pipe(
+        tap(_ => this.log(`fetched hero id=${id}`)),
+        catchError(this.handleError<Hero>(`getHero id=${id}`))
+      );
   }
 
   // Get heroes with name matching to search term
@@ -109,7 +110,7 @@ export class HeroService {
    * @param result - optional value to return as the observable result
    */
   private handleError<T>(operation = 'operation', result?: T) {
-    return(error: any): Observable<T> => {
+    return (error: any): Observable<T> => {
       console.error(error);
 
       this.log(`${operation} failed: ${error.message}`);
