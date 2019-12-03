@@ -38,10 +38,14 @@ describe('heroService', () => {
     return new HeroService(httpClientMock, messageService);
   }
 
-  it('getting a list of heroes', () => {
+  function getCreate(): HeroService {
     const get$ = new ReplaySubject(1);
     httpClientMock.get = jest.fn().mockReturnValue(get$);
-    heroService = create();
+    return create();
+  }
+
+  it('getting a list of heroes', () => {
+    heroService = getCreate();
 
     heroService.getHeroes().subscribe((res) => {
       expect(res).toEqual(dummyHeroes);
@@ -55,9 +59,7 @@ describe('heroService', () => {
   });
 
   it('get One specified hero', () => {
-    const get$ = new ReplaySubject(1);
-    httpClientMock.get = jest.fn().mockReturnValue(get$);
-    heroService = create();
+    heroService = getCreate();
 
     const ID = 19;
     heroService.getHero(ID).subscribe((res) => {
@@ -65,6 +67,12 @@ describe('heroService', () => {
     });
 
     expect(httpClientMock.get).toHaveBeenCalledWith(heroesUrl + `/${ID}`);
+  });
+
+
+  it('search a hero with a certain term', () => {
+    heroService = getCreate();
+
   });
 
 });
