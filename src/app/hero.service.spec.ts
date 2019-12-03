@@ -88,7 +88,7 @@ describe('heroService', () => {
     httpClientMock.put = jest.fn().mockReturnValue(put$);
     heroService = create();
 
-    const hero: Hero = { id: 20, name: 'UpdateNameHero'};
+    const hero: Hero = { id: 20, name: 'UpdateNameHero' };
 
     heroService.updateHero(hero);
 
@@ -104,7 +104,7 @@ describe('heroService', () => {
     httpClientMock.post = jest.fn().mockReturnValue(post$);
     heroService = create();
 
-    const hero: Hero = {id: 21, name: 'InsertNewHero'};
+    const hero: Hero = { id: 21, name: 'InsertNewHero' };
     heroService.addHero(hero);
 
     heroService = getCreate();
