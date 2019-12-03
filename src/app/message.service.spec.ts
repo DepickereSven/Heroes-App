@@ -8,7 +8,7 @@ describe('MessageService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [MessageService],
+      providers: [MessageService]
     });
 
     injector = getTestBed();
