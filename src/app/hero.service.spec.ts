@@ -96,8 +96,22 @@ describe('heroService', () => {
     heroService.getHero(20).subscribe((res) => {
       expect(res).toEqual(hero);
     });
-
   });
 
+
+  it('create an new hero', () => {
+    const post$ = new ReplaySubject(1);
+    httpClientMock.post = jest.fn().mockReturnValue(post$);
+    heroService = create();
+
+    const hero: Hero = {id: 21, name: 'InsertNewHero'};
+    heroService.addHero(hero);
+
+    heroService = getCreate();
+    heroService.getHero(21).subscribe((res) => {
+      expect(res).toEqual(hero);
+    });
+
+  });
 
 });
