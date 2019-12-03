@@ -22,8 +22,10 @@ describe('MessageService', () => {
     for (let index = 0; index < distance; index++) {
       messageService.add(`new message ${index}`);
     }
+
     expect(messageService.messages.length).toEqual(distance);
     expect(messageService.messages[2]).toEqual('new message 2');
+
     messageService.clear();
     expect(messageService.messages.length).toEqual(0);
   });
