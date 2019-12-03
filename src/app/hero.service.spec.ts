@@ -73,6 +73,13 @@ describe('heroService', () => {
   it('search a hero with a certain term', () => {
     heroService = getCreate();
 
+    const term = 'D';
+    const dummySearchTermResult = dummyHeroes.filter((hero => hero.name.indexOf(term)));
+    heroService.searchHeroes(term).subscribe((res) => {
+      expect(res).toEqual(dummySearchTermResult);
+    });
+
+    expect(httpClientMock.get).toHaveBeenCalledWith(heroesUrl + `/?name=${term}`);
   });
 
 });
