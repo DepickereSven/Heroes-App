@@ -5,6 +5,8 @@ import { HeroService } from './hero.service';
 import { ReplaySubject } from 'rxjs';
 import { Hero } from './hero';
 
+import { TestScheduler } from 'rxjs/testing';
+
 jest.mock('@angular/common/http');
 
 describe('heroService', () => {
@@ -38,6 +40,10 @@ describe('heroService', () => {
     } as any;
   });
 
+  const deepEqual = (actual: any, expected: any): void => {
+    expect(actual).toEqual(expected);
+  };
+
   function create(): HeroService {
     return new HeroService(httpClientMock, messageService);
   }
@@ -51,9 +57,31 @@ describe('heroService', () => {
   it('getting a list of heroes', () => {
     heroService = getCreate();
 
-    heroService.getHeroes().subscribe((res) => {
-      expect(res).toEqual(dummyHeroes);
+    const scheduler = new TestScheduler(deepEqual);
+    // scheduler.run(helpers => {
+    //   const { expectObservable } = helpers;
+    //   const expectMarble = '-a|';
+    //   const expectValues = dummyHeroes;
+    //   expectObservable(heroService.getHeroes()).toBe(expectMarble, expectValues);
+    // });
+
+    const marbles = {
+      a: '-a',
+    };
+
+    const value = {
+      a: dummyHeroes
+    };
+
+    scheduler.run(({ cold, expectObservable }) => {
+      const output$ = heroService.getHeroes();
+      expectObservable(output$).toBe(marbles.a, value);
     });
+
+    // m.expect(heroService.getHeroes).toBeObservable(expect);
+    // heroService.getHeroes().subscribe((res) => {
+    //   expect(res).toEqual(dummyHeroes);
+    // });
 
     expect(httpClientMock.get).toHaveBeenCalledWith(heroesUrl);
   });
