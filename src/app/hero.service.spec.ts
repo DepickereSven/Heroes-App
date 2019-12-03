@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 
 import { MessageService } from './message.service';
 import { HeroService } from './hero.service';
-import {ReplaySubject} from 'rxjs';
-import {Hero} from './hero';
+import { ReplaySubject } from 'rxjs';
+import { Hero } from './hero';
 
 jest.mock('@angular/common/http');
 
