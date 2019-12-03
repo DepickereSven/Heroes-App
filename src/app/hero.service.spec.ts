@@ -133,12 +133,11 @@ describe('heroService', () => {
     heroService.getHero(20).subscribe((res) => {
       console.log(res);
       expect(res).toEqual(null);
-    })
+    });
 
     heroService.getHero(hero.id).subscribe((res) => {
       console.log(res);
     });
-
   });
 
 });
