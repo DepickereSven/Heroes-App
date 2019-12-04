@@ -1,3 +1,18 @@
+
+.container .example-full-width {
+  max-width: 150px;
+  min-width: 125px;
+  width: 100%;
+}
+
+.container .button{
+  margin-right: 8px;
+}
+
+.mat-raised-button{
+  padding: 0 0;
+}
+
 /* HeroesComponent's private CSS styles */
 .heroes {
   margin: 0 0 2em 0;
@@ -38,7 +53,7 @@
   font-size: small;
   color: white;
   padding: 0.8em 0.7em 0 0.7em;
-  background-color:#405061;
+  background-color: #673ab7;
   line-height: 1em;
   position: relative;
   left: -1px;
@@ -68,6 +83,6 @@ button.delete {
   position: relative;
   left: 194px;
   top: -32px;
-  background-color: gray !important;
+  background-color: #673ab7 !important;
   color: white;
 }
