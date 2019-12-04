@@ -14,9 +14,11 @@ import { MessagesComponent } from './messages/messages.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { HeroSearchComponent } from './hero-search/hero-search.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DemoMaterialModule } from './materialDesign';
 
 @NgModule({
   imports: [
+    DemoMaterialModule,
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
