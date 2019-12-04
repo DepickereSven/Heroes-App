@@ -54,117 +54,127 @@ describe('heroService', () => {
     return create();
   }
 
-  it('getting a list of heroes', () => {
-    heroService = getCreate();
+  describe('getHeroes()', () => {
+    it('getting a list of heroes', () => {
+      heroService = getCreate();
 
-    const scheduler = new TestScheduler(deepEqual);
-    // scheduler.run(helpers => {
-    //   const { expectObservable } = helpers;
-    //   const expectMarble = '-a|';
-    //   const expectValues = dummyHeroes;
-    //   expectObservable(heroService.getHeroes()).toBe(expectMarble, expectValues);
-    // });
+      const scheduler = new TestScheduler(deepEqual);
+      // scheduler.run(helpers => {
+      //   const { expectObservable } = helpers;
+      //   const expectMarble = '-a|';
+      //   const expectValues = dummyHeroes;
+      //   expectObservable(heroService.getHeroes()).toBe(expectMarble, expectValues);
+      // });
 
-    const marbles = {
-      a: '-a',
-    };
+      const marbles = {
+        a: '-a',
+      };
 
-    const value = {
-      a: dummyHeroes
-    };
+      const value = {
+        a: dummyHeroes
+      };
 
-    scheduler.run(({ cold, expectObservable }) => {
-      const output$ = heroService.getHeroes();
-      expectObservable(output$).toBe(marbles.a, value);
+      scheduler.run(({ cold, expectObservable }) => {
+        const output$ = heroService.getHeroes();
+        expectObservable(output$).toBe(marbles.a, value);
+      });
+
+      // m.expect(heroService.getHeroes).toBeObservable(expect);
+      // heroService.getHeroes().subscribe((res) => {
+      //   expect(res).toEqual(dummyHeroes);
+      // });
+
+      expect(httpClientMock.get).toHaveBeenCalledWith(heroesUrl);
     });
-
-    // m.expect(heroService.getHeroes).toBeObservable(expect);
-    // heroService.getHeroes().subscribe((res) => {
-    //   expect(res).toEqual(dummyHeroes);
-    // });
-
-    expect(httpClientMock.get).toHaveBeenCalledWith(heroesUrl);
   });
 
-  it('get One specified hero', () => {
-    heroService = getCreate();
+  describe('getHero()', () => {
+    it('get One specified hero', () => {
+      heroService = getCreate();
 
-    const ID = 19;
-    heroService.getHero(ID).subscribe((res) => {
-      expect(res).toEqual({ id: 19, name: 'Magma' });
-    });
+      const ID = 19;
+      heroService.getHero(ID).subscribe((res) => {
+        expect(res).toEqual({ id: 19, name: 'Magma' });
+      });
 
-    expect(httpClientMock.get).toHaveBeenCalledWith(heroesUrl + `/${ID}`);
-  });
-
-
-  it('search a hero with a certain term', () => {
-    heroService = getCreate();
-
-    const term = 'D';
-    const dummySearchTermResult = dummyHeroes.filter((hero => hero.name.indexOf(term)));
-    heroService.searchHeroes(term).subscribe((res) => {
-      expect(res).toEqual(dummySearchTermResult);
-    });
-
-    expect(httpClientMock.get).toHaveBeenCalledWith(heroesUrl + `/?name=${term}`);
-  });
-
-
-  it('update the details of a hero', () => {
-    const put$ = new ReplaySubject(1);
-    httpClientMock.put = jest.fn().mockReturnValue(put$);
-    heroService = create();
-
-    const hero: Hero = { id: 20, name: 'UpdateNameHero' };
-
-    heroService.updateHero(hero);
-
-    const get$ = new ReplaySubject(1);
-    httpClientMock.get = jest.fn().mockReturnValue(get$);
-
-    heroService.getHero(20).subscribe((res) => {
-      expect(res).toEqual(hero);
+      expect(httpClientMock.get).toHaveBeenCalledWith(heroesUrl + `/${ID}`);
     });
   });
 
 
-  it('create an new hero', () => {
-    const post$ = new ReplaySubject(1);
-    httpClientMock.post = jest.fn().mockReturnValue(post$);
-    heroService = create();
+  describe('searchHero()', () => {
+    it('search a hero with a certain term', () => {
+      heroService = getCreate();
 
-    const hero: Hero = { id: 21, name: 'InsertNewHero' };
-    heroService.addHero(hero);
+      const term = 'D';
+      const dummySearchTermResult = dummyHeroes.filter((hero => hero.name.indexOf(term)));
+      heroService.searchHeroes(term).subscribe((res) => {
+        expect(res).toEqual(dummySearchTermResult);
+      });
 
-    const get$ = new ReplaySubject(1);
-    httpClientMock.get = jest.fn().mockReturnValue(get$);
-
-    heroService.getHero(21).subscribe((res) => {
-      expect(res).toEqual(hero);
+      expect(httpClientMock.get).toHaveBeenCalledWith(heroesUrl + `/?name=${term}`);
     });
   });
 
-  it('delete a hero', () => {
-    const delete$ = new ReplaySubject(1);
-    httpClientMock.delete = jest.fn().mockReturnValue(delete$);
-    heroService = create();
+  describe('updateHero()', () => {
+    it('update the details of a hero', () => {
+      const put$ = new ReplaySubject(1);
+      httpClientMock.put = jest.fn().mockReturnValue(put$);
+      heroService = create();
 
-    const hero: Hero = { id: 18, name: 'Dr IQ' };
-    heroService.deleteHero(20);
-    heroService.deleteHero(hero);
+      const hero: Hero = { id: 20, name: 'UpdateNameHero' };
 
+      heroService.updateHero(hero);
 
-    const get$ = new ReplaySubject(1);
-    httpClientMock.get = jest.fn().mockReturnValue(get$);
+      const get$ = new ReplaySubject(1);
+      httpClientMock.get = jest.fn().mockReturnValue(get$);
 
-    heroService.getHero(20).subscribe((res) => {
-      console.log(res);
-      expect(res).toEqual(null);
+      heroService.getHero(20).subscribe((res) => {
+        expect(res).toEqual(hero);
+      });
     });
+  });
 
-    heroService.getHero(hero.id).subscribe((res) => {
-      console.log(res);
+  describe('addHero()', () => {
+    it('create an new hero', () => {
+      const post$ = new ReplaySubject(1);
+      httpClientMock.post = jest.fn().mockReturnValue(post$);
+      heroService = create();
+
+      const hero: Hero = { id: 21, name: 'InsertNewHero' };
+      heroService.addHero(hero);
+
+      const get$ = new ReplaySubject(1);
+      httpClientMock.get = jest.fn().mockReturnValue(get$);
+
+      heroService.getHero(21).subscribe((res) => {
+        expect(res).toEqual(hero);
+      });
+    });
+  });
+
+  describe('deleteHero()', () => {
+    it('delete a hero', () => {
+      const delete$ = new ReplaySubject(1);
+      httpClientMock.delete = jest.fn().mockReturnValue(delete$);
+      heroService = create();
+
+      const hero: Hero = { id: 18, name: 'Dr IQ' };
+      heroService.deleteHero(20);
+      heroService.deleteHero(hero);
+
+
+      const get$ = new ReplaySubject(1);
+      httpClientMock.get = jest.fn().mockReturnValue(get$);
+
+      heroService.getHero(20).subscribe((res) => {
+        console.log(res);
+        expect(res).toEqual(null);
+      });
+
+      heroService.getHero(hero.id).subscribe((res) => {
+        console.log(res);
+      });
     });
   });
 
