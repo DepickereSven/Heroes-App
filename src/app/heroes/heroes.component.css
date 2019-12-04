@@ -1,13 +1,4 @@
 
-.container{
-  display: flex;
-  flex-direction: column;
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
-  align-items: center;
-}
-
 .container .example-full-width {
   max-width: 150px;
   min-width: 125px;
