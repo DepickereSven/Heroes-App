@@ -1,5 +1,7 @@
 import { Hero } from './hero';
 
+// 2 test
+
 describe('Hero Class', () => {
 
   let hero: Hero;
